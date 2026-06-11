@@ -15,7 +15,7 @@ function createHearts() {
         setTimeout(() => {
             heart.remove();
         }, 7000);
-    }, 300);
+    }, 800);
 }
 
 createHearts();
@@ -123,7 +123,7 @@ function renderScreen(screen) {
                 heart.style.animationDuration = (Math.random() * 2 + 3) + 's';
                 heart.style.fontSize = (Math.random() * 30 + 20) + 'px';
                 heartsContainer.appendChild(heart);
-            }, 100);
+            }, 400);
 
             card.innerHTML = `
                 <img src="assets/cute_alien.png" class="alien-badge" alt="alien" />

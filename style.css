@@ -54,6 +54,7 @@ body::before {
     color: var(--secondary-color);
     animation: float 6s linear infinite;
     opacity: 0;
+    will-change: transform;
 }
 
 @keyframes float {
@@ -63,8 +64,8 @@ body::before {
 
 .glass-card {
     background: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
     border: 1px solid var(--glass-border);
     box-shadow: 0 20px 40px var(--glass-shadow);
     border-radius: 24px;
