@@ -53,9 +53,13 @@ function renderScreen(screen) {
             card.innerHTML = `
                 <h1>Face Verification 📷</h1>
                 <div class="camera-status">🔴 Kamera Aktif</div>
-                <div class="face-scanner" id="face-scanner">
-                    <div class="scan-line"></div>
-                    <img src="public/IMG_8198.JPG" class="login-photo" style="margin-bottom:0;" alt="Face Scan" />
+                <div class="face-scanner-wrapper">
+                    <div id="arrow-left" class="big-arrow left" style="visibility:hidden;">⬅️</div>
+                    <div class="face-scanner" id="face-scanner" style="margin:0;">
+                        <div class="scan-line"></div>
+                        <img src="public/IMG_8198.JPG" class="login-photo" style="margin-bottom:0;" alt="Face Scan" />
+                    </div>
+                    <div id="arrow-right" class="big-arrow right" style="visibility:hidden;">➡️</div>
                 </div>
                 <p id="verify-instruction" style="font-size:16px; font-weight:700; color:var(--secondary-color); height:60px; display:flex; align-items:center; justify-content:center; text-align:center;">Posisikan wajahmu menghadap kamera...</p>
                 <div class="progress-bar-container">
@@ -142,7 +146,26 @@ function renderScreen(screen) {
                     Makasih ya udah jadi pacar yang paling hebat buat si alien ini. 👽
                     Semoga kita langgeng terus dan selalu bahagia. I love you more than 3000!"
                 </div>
+                <p style="margin-top:20px; font-weight:bold; color:var(--text-color); font-size:15px; background: rgba(255,255,255,0.8); padding: 10px; border-radius: 12px; border: 1px dashed var(--primary-color);">
+                    Liat terus update an and gebrakan disini yahh! ✨
+                </p>
             `;
+
+            // Trigger fake ad after 4 seconds
+            setTimeout(() => {
+                if(document.getElementById('fake-ad')) return; // Mencegah dobel
+                const adOverlay = document.createElement('div');
+                adOverlay.id = 'fake-ad';
+                adOverlay.innerHTML = `
+                    <div class="ad-content">
+                        <button class="ad-close" onclick="document.getElementById('fake-ad').remove()">❌</button>
+                        <h2 class="ad-title">PLENGER DULUU</h2>
+                        <img src="public/WIN_20260606_20_55_41_Pro.jpg" class="ad-image" alt="Plenger" />
+                    </div>
+                `;
+                document.body.appendChild(adOverlay);
+            }, 4000);
+
             break;
     }
 }
@@ -238,7 +261,14 @@ function runFaceVerification() {
     const instruction = document.getElementById('verify-instruction');
     const progressBar = document.getElementById('verify-progress');
     const scanner = document.getElementById('face-scanner');
+    const arrowLeft = document.getElementById('arrow-left');
+    const arrowRight = document.getElementById('arrow-right');
     
+    function hideArrows() {
+        arrowLeft.style.visibility = 'hidden';
+        arrowRight.style.visibility = 'hidden';
+    }
+
     function runProgress(duration) {
         progressBar.style.transition = 'none';
         progressBar.style.width = '0%';
@@ -275,32 +305,58 @@ function runFaceVerification() {
     // Step 4: Kanan
     setTimeout(() => {
         instruction.innerText = "Coba tengok ke kanan... 👀";
+        arrowRight.style.visibility = 'visible';
         runProgress(4000);
     }, 8500);
 
     // Step 5: Kiri
     setTimeout(() => {
         instruction.innerText = "Sekarang coba tengok ke kiri... 👀";
+        hideArrows();
+        arrowLeft.style.visibility = 'visible';
         runProgress(4000);
     }, 12500);
 
-    // Step 6: Geleng
+    // Step 6: Fake Failure 2 (During Kiri)
     setTimeout(() => {
-        instruction.innerText = "Coba geleng-geleng... 🤪";
+        instruction.innerHTML = "❌ Verifikasi Gagal!<br>Gerakan terlalu cepat, ulang tengok kiri.";
+        instruction.style.color = '#ff4d4d';
+        hideArrows();
+        progressBar.style.transition = 'none';
+        progressBar.style.width = '100%';
+        progressBar.style.background = '#ff4d4d';
+        scanner.style.borderColor = '#ff4d4d';
+        scanner.style.animation = 'shake 0.5s';
+    }, 15000);
+
+    // Step 7: Retry Kiri
+    setTimeout(() => {
+        instruction.innerText = "Coba tengok kiri lagi pelan-pelan... 👀";
+        instruction.style.color = 'var(--secondary-color)';
+        scanner.style.borderColor = 'var(--primary-color)';
+        scanner.style.animation = 'none';
+        arrowLeft.style.visibility = 'visible';
+        runProgress(3500);
+    }, 18000);
+
+    // Step 8: Geleng
+    setTimeout(() => {
+        instruction.innerText = "Coba geleng-geleng...";
+        hideArrows();
         runProgress(4000);
-    }, 16500);
+    }, 21500);
 
     // Final
     setTimeout(() => {
         instruction.innerText = "Manis banget bidadari kaka 🥰❤️";
         progressBar.parentElement.style.display = 'none';
         document.querySelector('.scan-line').style.display = 'none';
-    }, 20500);
+    }, 25500);
 
     // Proceed to Q1
     setTimeout(() => {
         renderScreen(screens.Q1);
-    }, 24000);
+    }, 29000);
 }
 
 // Start
